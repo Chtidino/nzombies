@@ -76,10 +76,10 @@ end
 
 function SWEP:Equip( owner )
 	
-	timer.Simple(3.2,function()
-		owner:SetUsingSpecialWeapon(false)
-		owner:EquipPreviousWeapon()
-	end)
+	--timer.Simple(3.2,function()
+	--	owner:SetUsingSpecialWeapon(false)
+	--	owner:EquipPreviousWeapon()
+	--end)
 	owner:SetActiveWeapon("nz_perk_bottle")
 	
 end
