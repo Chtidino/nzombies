@@ -81,15 +81,15 @@ local function ScoreHud()
 					--for i = 0, 8 do
 						--surface.SetMaterial(bloodDecals[((index + i - 1) % #bloodDecals) + 1 ])
 						surface.SetMaterial(blood)
-						surface.DrawTexturedRect(ScrW() - textW - 180, ScrH() - 275 * scale - offset, textW + 150, 45)
+						surface.DrawTexturedRect(10 , ScrH() - 175 * scale - offset, textW + 150, 45)
 					--end
 					--surface.DrawTexturedRect(ScrW() - 325*scale - numname * 10, ScrH() - 285*scale - (30*k), 250 + numname*10, 35)
-					if text then draw.SimpleText(text, font, ScrW() - textW - 60, ScrH() - 255 * scale - offset, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
+					if text then draw.SimpleText(text, font, 40, ScrH() - 154 * scale - offset, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER) end
 					if LocalPlayer() == v then
 						font = "nz.display.hud.medium"
 					end
-					draw.SimpleText(v:GetPoints(), font, ScrW() - textW - 60 - nameoffset, ScrH() - 255 * scale - offset, color, TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
-					v.PointsSpawnPosition = {x = ScrW() - textW - 170, y = ScrH() - 255 * scale - offset}
+					draw.SimpleText(v:GetPoints(), font, textW + 65 - nameoffset, ScrH() - 154 * scale - offset, color, TEXT_ALIGN_LEFT, TEXT_ALIGN_CENTER)
+					v.PointsSpawnPosition = {x = textW + 140, y = ScrH() - 154 * scale - offset}
 				end
 			end
 		end
@@ -251,9 +251,9 @@ local function DrawPointsNotification()
 		local fade = math.Clamp((CurTime()-v.time), 0, 1)
 		if !v.ply.PointsSpawnPosition then return end
 		if v.amount >= 0 then
-			draw.SimpleText(v.amount, font, v.ply.PointsSpawnPosition.x - 50*fade, v.ply.PointsSpawnPosition.y + v.diry*fade, Color(255,255,0,255-255*fade), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+			draw.SimpleText(v.amount, font, v.ply.PointsSpawnPosition.x + 70*fade, v.ply.PointsSpawnPosition.y + v.diry*fade, Color(255,255,0,255-255*fade), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 		else
-			draw.SimpleText(v.amount, font, v.ply.PointsSpawnPosition.x - 50*fade, v.ply.PointsSpawnPosition.y + v.diry*fade, Color(255,0,0,255-255*fade), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
+			draw.SimpleText(v.amount, font, v.ply.PointsSpawnPosition.x + 70*fade, v.ply.PointsSpawnPosition.y + v.diry*fade, Color(255,0,0,255-255*fade), TEXT_ALIGN_RIGHT, TEXT_ALIGN_CENTER)
 		end
 		if fade >= 1 then
 			table.remove(PointsNotifications, k)
@@ -261,34 +261,22 @@ local function DrawPointsNotification()
 	end
 end
 
--- Now handled via perks individual icon table entries
---[[local perk_icons = {
-	["jugg"] = Material("perk_icons/jugg.png", "smooth unlitgeneric"),
-	["speed"] = Material("perk_icons/speed.png", "smooth unlitgeneric"),
-	["dtap"] = Material("perk_icons/dtap.png", "smooth unlitgeneric"),
-	["revive"] = Material("perk_icons/revive.png", "smooth unlitgeneric"),
-	["dtap2"] = Material("perk_icons/dtap2.png", "smooth unlitgeneric"),
-	["staminup"] = Material("perk_icons/staminup.png", "smooth unlitgeneric"),
-	["phd"] = Material("perk_icons/phd.png", "smooth unlitgeneric"),
-	["deadshot"] = Material("perk_icons/deadshot.png", "smooth unlitgeneric"),
-	["mulekick"] = Material("perk_icons/mulekick.png", "smooth unlitgeneric"),
-	["cherry"] = Material("perk_icons/cherry.png", "smooth unlitgeneric"),
-	["tombstone"] = Material("perk_icons/tombstone.png", "smooth unlitgeneric"),
-	["whoswho"] = Material("perk_icons/whoswho.png", "smooth unlitgeneric"),
-	["vulture"] = Material("perk_icons/vulture.png", "smooth unlitgeneric"),
-
-	-- Only used to see PaP through walls with Vulture Aid
-	["pap"] = Material("vulture_icons/pap.png", "smooth unlitgeneric"),
-}]]
-
 local function PerksHud()
-	local scale = (ScrW()/1920 + 1)/2
-	local w = -20
+	local scale = (ScrW()/1920 + 1)/1.75
+	local w = 175
 	local size = 50
+	local rank = -58
+	local rank_check = 0
+	local rank_mult = 0
 	for k,v in pairs(LocalPlayer():GetPerks()) do
 		surface.SetMaterial(nzPerks:Get(v).icon)
 		surface.SetDrawColor(255,255,255)
-		surface.DrawTexturedRect(w + k*(size*scale + 10), ScrH() - 200, size*scale, size*scale)
+		surface.DrawTexturedRect(w + k*(size*scale + 1), ScrH() - 75 + rank*rank_mult, size*scale, size*scale)
+		rank_check = rank_check + 1
+		if rank_check == 7 then
+			rank_mult = rank_mult + 1
+			w = w - k*(size*scale + 1)
+		end
 	end
 end
 
@@ -300,7 +288,7 @@ local vulture_textures = {
 
 local function VultureVision()
 	if !LocalPlayer():HasPerk("vulture") then return end
-	local scale = (ScrW()/1920 + 1)/2
+	local scale = (ScrW()/1920 + 1.5)/1.75
 
 	for k,v in pairs(ents.FindInSphere(LocalPlayer():GetPos(), 700)) do
 		local target = v:GetClass()
@@ -333,29 +321,26 @@ local function RoundHud()
 
 	local text = ""
 	local font = "nz.display.hud.rounds"
-	local w = 70
-	local h = ScrH() - 30
+	local w = 35
+	local h = ScrH() - 15
 	local round = round_num
-	local col = Color(200 + round_white*55, round_white, round_white,round_alpha)
+	local col = Color(100 + round_white*55, round_white, round_white,round_alpha)
 	if round == -1 then
 		--text = "∞"
 		surface.SetMaterial(infmat)
 		surface.SetDrawColor(col.r,round_white,round_white,round_alpha)
 		surface.DrawTexturedRect(w - 25, h - 100, 200, 100)
 		return
-	elseif round < 11 then
+	elseif round < 6 then
 		for i = 1, round do
-			if i == 5 or i == 10 then
+			if i == 5 or i == 6 then
 				text = text.." "
 			else
 				text = text.."i"
 			end
 		end
 		if round >= 5 then
-			draw.TextRotatedScaled( "i", w + 100, h - 150, col, font, 60, 1, 1.7 )
-		end
-		if round >= 10 then
-			draw.TextRotatedScaled( "i", w + 220, h - 150, col, font, 60, 1, 1.7 )
+			draw.TextRotatedScaled( "i", w + 95, h - 175, col, font, 60, 1, 1.38 )
 		end
 	else
 		text = round
@@ -446,7 +431,7 @@ local function DrawGrenadeHud()
 		surface.SetDrawColor(255,255,255)
 		for i = num, 1, -1 do
 			--print(i)
-			surface.DrawTexturedRect(ScrW() - 250*scale - i*10*scale, ScrH() - 90*scale, 30*scale, 30*scale)
+			surface.DrawTexturedRect(ScrW() - 275*scale - i*20*scale, ScrH() - 90*scale, 60*scale, 60*scale)
 		end
 	end
 	if numspecial > 0 then
@@ -454,7 +439,7 @@ local function DrawGrenadeHud()
 		surface.SetDrawColor(255,100,100)
 		for i = numspecial, 1, -1 do
 			--print(i)
-			surface.DrawTexturedRect(ScrW() - 300*scale - i*10*scale, ScrH() - 90*scale, 30*scale, 30*scale)
+			surface.DrawTexturedRect(ScrW() - 390*scale - i*23*scale, ScrH() - 90*scale, 62*scale, 62*scale)
 		end
 	end
 	--surface.DrawTexturedRect(ScrW()/2, ScrH()/2, 100, 100)
