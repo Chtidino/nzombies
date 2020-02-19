@@ -636,7 +636,7 @@ function ENT:OnKilled(dmgInfo)
 
 	self.ZombieAlive = false
 
-	hook.Call("OnZombieKilled", GAMEMODE, self, dmgInfo)
+	hook.Call("OnZombieKilled", GAMEMODE, self, dmgInfo:GetAttacker(), dmgInfo, util.QuickTrace( dmgInfo:GetDamagePosition(), dmgInfo:GetDamagePosition() ).HitGroup)
 
 end
 
