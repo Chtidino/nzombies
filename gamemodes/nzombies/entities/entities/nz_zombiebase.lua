@@ -608,7 +608,7 @@ function ENT:OnInjured( dmgInfo )
 	self:EmitSound( soundName, 90 )
 end
 
-function ENT:OnZombieDeath()
+function ENT:OnZombieDeath(dmgInfo)
 	self:BecomeRagdoll(dmgInfo)
 end
 
