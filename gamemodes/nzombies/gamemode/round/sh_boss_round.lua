@@ -167,8 +167,8 @@ nzRound:AddBossType("Panzer", "nz_zombie_boss_panzer", {
 	end,
 	deathfunc = function(panzer, killer, dmginfo, hitgroup)
 		nzRound:SetNextBossRound(nzRound:GetNumber() + math.random(3,3)) -- Delay further boss spawning by 3 rounds
-		if IsValid(attacker) and attacker:IsPlayer() and attacker:GetNotDowned() then
-			attacker:GivePoints(1500) -- Give killer 500 points if not downed
+		if IsValid(killer) and killer:IsPlayer() and killer:GetNotDowned() then
+			killer:GivePoints(1250) -- Give killer 1500 points if not downed
 		end
 	end,
 }) -- No onhit function, we don't give points on hit for this guy
