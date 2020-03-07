@@ -244,7 +244,7 @@ local function DrawTargetID( text )
 	y = y + 30
 
 	-- The fonts internal drop shadow looks lousy with AA on
-	draw.SimpleText( text, font, x+1, y+1, Color(255,255,255,255) )
+	draw.SimpleTextOutlined(text, font, x+1, y+1, Color(255,255,255,255), TEXT_ALIGN_TOP, TEXT_ALIGN_TOP, 1, color_black)
 end
 
 
